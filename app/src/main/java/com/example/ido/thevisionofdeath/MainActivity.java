@@ -136,7 +136,7 @@ public class MainActivity extends BaseActivity implements CameraDialog.CameraDia
                 public void run() {
                     synchronized (mSync) {
                         final UVCCamera camera = new UVCCamera();
-                        camera.open(ctrlBlock);
+                        camera.open(ctrlBlock, 0);
                         if (DEBUG) Log.i(TAG, "supportedSize:" + camera.getSupportedSize());
                         try {
                             camera.setPreviewSize(UVCCamera.DEFAULT_PREVIEW_WIDTH, UVCCamera.DEFAULT_PREVIEW_HEIGHT, UVCCamera.FRAME_FORMAT_MJPEG);
