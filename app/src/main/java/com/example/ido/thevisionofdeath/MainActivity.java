@@ -136,16 +136,22 @@ public class MainActivity extends BaseActivity implements CameraDialog.CameraDia
                 public void run() {
                     synchronized (mSync) {
                         final UVCCamera camera = new UVCCamera();
+                        final UVCCamera camera2 = new UVCCamera();
+                        camera2.open(ctrlBlock, 1);
                         camera.open(ctrlBlock, 0);
                         if (DEBUG) Log.i(TAG, "supportedSize:" + camera.getSupportedSize());
+                        if (DEBUG) Log.i(TAG, "supportedSize:" + camera2.getSupportedSize());
                         try {
                             camera.setPreviewSize(UVCCamera.DEFAULT_PREVIEW_WIDTH, UVCCamera.DEFAULT_PREVIEW_HEIGHT, UVCCamera.FRAME_FORMAT_MJPEG);
+                            camera2.setPreviewSize(UVCCamera.DEFAULT_PREVIEW_WIDTH, UVCCamera.DEFAULT_PREVIEW_HEIGHT, UVCCamera.FRAME_FORMAT_MJPEG);
                         } catch (final IllegalArgumentException e) {
                             try {
                                 // fallback to YUV mode
                                 camera.setPreviewSize(UVCCamera.DEFAULT_PREVIEW_WIDTH, UVCCamera.DEFAULT_PREVIEW_HEIGHT, UVCCamera.DEFAULT_PREVIEW_MODE);
+                                camera2.setPreviewSize(UVCCamera.DEFAULT_PREVIEW_WIDTH, UVCCamera.DEFAULT_PREVIEW_HEIGHT, UVCCamera.DEFAULT_PREVIEW_MODE);
                             } catch (final IllegalArgumentException e1) {
                                 camera.destroy();
+                                camera2.destroy();
                                 return;
                             }
                         }
@@ -153,10 +159,13 @@ public class MainActivity extends BaseActivity implements CameraDialog.CameraDia
                         if (mPreviewSurface != null) {
                             isActive = true;
                             camera.setPreviewDisplay(mPreviewSurface);
+                            camera2.setPreviewDisplay(mPreviewSurface);
                             camera.startPreview();
+                            camera2.startPreview();
                             isPreview = true;
                         }
                         synchronized (mSync) {
+                            mUVCCamera = camera2;
                             mUVCCamera = camera;
                         }
                     }
